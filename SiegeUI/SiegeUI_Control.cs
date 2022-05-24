@@ -61,42 +61,42 @@ namespace SiegeUI
         /// <summary>
         /// Occurs whenever the mouse is moving within the window.
         /// </summary>
-        public event EventHandler MouseMoving = default!;
+        public event EventHandler WindowMouseMoving = default!;
 
         /// <summary>
         /// Occurs whenever the mouse button is pressed within the window.
         /// </summary>
-        public event EventHandler MouseDown = default!;
+        public event EventHandler WindowMouseDown = default!;
 
         /// <summary>
         /// Occurs whenever the mouse button is released within the window.
         /// </summary>
-        public event EventHandler MouseUp = default!;
+        public event EventHandler WindowMouseUp = default!;
 
         /// <summary>
         /// Occurs whenever the mouse wheel value changes within the window.
         /// </summary>
-        public event EventHandler MouseWheel = default!;
+        public event EventHandler WindowMouseWheel = default!;
 
         /// <summary>
         /// Occurs whenever the mouse enters the window.
         /// </summary>
-        public event EventHandler MouseEntered = default!;
+        public event EventHandler WindowMouseEntered = default!;
 
         /// <summary>
         /// Occurs whenever the mouse exits the window.
         /// </summary>
-        public event EventHandler MouseExited = default!;
+        public event EventHandler WindowMouseExited = default!;
 
         /// <summary>
         /// Occurs whenever the keyboard button is pressed within the window.
         /// </summary>
-        public event EventHandler KeyDown = default!;
+        public event EventHandler WindowKeyDown = default!;
 
         /// <summary>
         /// Occurs whenever the keyboard button is released within the window.
         /// </summary>
-        public event EventHandler KeyUp = default!;
+        public event EventHandler WindowKeyUp = default!;
 
         #endregion
 
@@ -172,10 +172,10 @@ namespace SiegeUI
                             WindowSizeChanged?.Invoke(this, EventArgs.Empty);
                             break;
                         case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER:
-                            MouseEntered?.Invoke(this, EventArgs.Empty);
+                            WindowMouseEntered?.Invoke(this, EventArgs.Empty);
                             break;
                         case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE:
-                            MouseExited?.Invoke(this, EventArgs.Empty);
+                            WindowMouseExited?.Invoke(this, EventArgs.Empty);
                             break;
                     }
                     break;
@@ -186,7 +186,7 @@ namespace SiegeUI
                         Position = new SiegeUI_Point(sdl_event.motion.x, sdl_event.motion.y)
                     };
 
-                    MouseMoving?.Invoke(this, mouseEventArgs);
+                    WindowMouseMoving?.Invoke(this, mouseEventArgs);
                     break;
                 case SDL.SDL_EventType.SDL_MOUSEWHEEL:
                     SiegeUI_MouseEventArgs mouseWheelEventArgs = new SiegeUI_MouseEventArgs()
@@ -195,7 +195,7 @@ namespace SiegeUI
                         WheelDirection = sdl_event.wheel.direction
                     };
 
-                    MouseWheel?.Invoke(this, mouseWheelEventArgs);
+                    WindowMouseWheel?.Invoke(this, mouseWheelEventArgs);
                     break;
                 case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
                     SiegeUI_MouseEventArgs mouseDownEventArgs = new SiegeUI_MouseEventArgs()
@@ -204,7 +204,7 @@ namespace SiegeUI
                         Button = (SiegeUI_MouseEventArgs.MouseButton)sdl_event.button.button
                     };
 
-                    MouseDown?.Invoke(this, mouseDownEventArgs);
+                    WindowMouseDown?.Invoke(this, mouseDownEventArgs);
                     break;
                 case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
                     SiegeUI_MouseEventArgs mouseUpEventArgs = new SiegeUI_MouseEventArgs()
@@ -213,7 +213,7 @@ namespace SiegeUI
                         Button = (SiegeUI_MouseEventArgs.MouseButton)sdl_event.button.button
                     };
 
-                    MouseUp?.Invoke(this, mouseUpEventArgs);
+                    WindowMouseUp?.Invoke(this, mouseUpEventArgs);
                     break;
                 case SDL.SDL_EventType.SDL_KEYDOWN:
                     SiegeUI_KeyboardEventArgs keyDownEventArgs = new SiegeUI_KeyboardEventArgs()
@@ -222,7 +222,7 @@ namespace SiegeUI
                         KeyCode = sdl_event.key.keysym.sym
                     };
 
-                    KeyDown?.Invoke(this, keyDownEventArgs);
+                    WindowKeyDown?.Invoke(this, keyDownEventArgs);
                     break;
                 case SDL.SDL_EventType.SDL_KEYUP:
                     SiegeUI_KeyboardEventArgs keyUpEventArgs = new SiegeUI_KeyboardEventArgs()
@@ -231,7 +231,7 @@ namespace SiegeUI
                         KeyCode = sdl_event.key.keysym.sym
                     };
 
-                    KeyUp?.Invoke(this, keyUpEventArgs);
+                    WindowKeyUp?.Invoke(this, keyUpEventArgs);
                     break;
             }
         }
