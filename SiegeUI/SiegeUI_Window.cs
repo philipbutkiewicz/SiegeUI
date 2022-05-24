@@ -1,105 +1,10 @@
 ﻿using SDL2;
 using SiegeUI.Drawing;
-using static SiegeUI.SiegeUI_EventArgs;
 
 namespace SiegeUI
 {
-    public class SiegeUI_Window : IDisposable
+    public class SiegeUI_Window : SiegeUI_Control
     {
-        #region Events
-
-        /// <summary>
-        /// Occurs whenever the window is shown.
-        /// </summary>
-        public event EventHandler WindowShown = default!;
-
-        /// <summary>
-        /// Occurs whenever the window is hidden.
-        /// </summary>
-        public event EventHandler WindowHidden = default!;
-
-        /// <summary>
-        /// Occurs whenever the window begins closing.
-        /// </summary>
-        public event EventHandler WindowClosing = default!;
-
-        /// <summary>
-        /// Occurs whenever the window gains focus.
-        /// </summary>
-        public event EventHandler WindowFocusGained = default!;
-
-        /// <summary>
-        /// Occurs whenever the window loses focus.
-        /// </summary>
-        public event EventHandler WindowFocusLost = default!;
-
-        /// <summary>
-        /// Occurs whenever the window is maximized.
-        /// </summary>
-        public event EventHandler WindowMaximized = default!;
-
-        /// <summary>
-        /// Occurs whenever the window is minimized.
-        /// </summary>
-        public event EventHandler WindowMinimized = default!;
-
-        /// <summary>
-        /// Occurs whenever the window is moved.
-        /// </summary>
-        public event EventHandler WindowMoved = default!;
-
-        /// <summary>
-        /// Occurs whenever the window is resized.
-        /// </summary>
-        public event EventHandler WindowResized = default!;
-
-        /// <summary>
-        /// Occurs whenever the window size is changed.
-        /// </summary>
-        public event EventHandler WindowSizeChanged = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse is moving within the window.
-        /// </summary>
-        public event EventHandler MouseMoving = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse button is pressed within the window.
-        /// </summary>
-        public event EventHandler MouseDown = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse button is released within the window.
-        /// </summary>
-        public event EventHandler MouseUp = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse wheel value changes within the window.
-        /// </summary>
-        public event EventHandler MouseWheel = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse enters the window.
-        /// </summary>
-        public event EventHandler MouseEntered = default!;
-
-        /// <summary>
-        /// Occurs whenever the mouse exits the window.
-        /// </summary>
-        public event EventHandler MouseExited = default!;
-
-        /// <summary>
-        /// Occurs whenever the keyboard button is pressed within the window.
-        /// </summary>
-        public event EventHandler KeyDown = default!;
-
-        /// <summary>
-        /// Occurs whenever the keyboard button is released within the window.
-        /// </summary>
-        public event EventHandler KeyUp = default!;
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -217,7 +122,7 @@ namespace SiegeUI
         /// <summary>
         /// Disposes of this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (KeyValuePair<string, SiegeUI_Control> _control in Controls)
             {
@@ -233,7 +138,7 @@ namespace SiegeUI
         /// <summary>
         /// Window update method.
         /// </summary>
-        public void Update()
+        public override void Update()
         {
             SDL.SDL_Event sdl_event;
             SDL.SDL_WaitEvent(out sdl_event);
@@ -250,6 +155,38 @@ namespace SiegeUI
 
             SDL.SDL_UpdateWindowSurface(_sdlWindow);
             SDL.SDL_RenderPresent(_sdlRenderer);
+        }
+
+
+        /// <summary>
+        /// Handles incoming SDL events.
+        /// </summary>
+        /// <param name="sdl_event"></param>
+        public override void HandleSDLEvent(SDL.SDL_Event sdl_event)
+        {
+            uint windowID = SDL.SDL_GetWindowID(_sdlWindow);
+            if (sdl_event.window.windowID != windowID)
+            {
+                return;
+            }
+
+            base.HandleSDLEvent(sdl_event);
+
+
+            foreach (KeyValuePair<string, SiegeUI_Control> control in Controls)
+            {
+                control.Value?.HandleSDLEvent(sdl_event);
+            }
+
+            if (sdl_event.type == SDL.SDL_EventType.SDL_WINDOWEVENT && sdl_event.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
+            {
+                Close();
+
+                if (IsMainWindow)
+                {
+                    SiegeUI_Controller.Destroy();
+                }
+            }
         }
 
         /// <summary>
@@ -316,125 +253,6 @@ namespace SiegeUI
         private void SetupRenderer()
         {
             SDL.SDL_SetRenderDrawBlendMode(_sdlRenderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
-        }
-
-        /// <summary>
-        /// Handles incoming SDL events.
-        /// </summary>
-        /// <param name="sdl_event"></param>
-        private void HandleSDLEvent(SDL.SDL_Event sdl_event)
-        {
-            uint windowID = SDL.SDL_GetWindowID(_sdlWindow);
-            if (sdl_event.window.windowID != windowID)
-            {
-                return;
-            }
-
-            switch (sdl_event.type)
-            {
-                case SDL.SDL_EventType.SDL_WINDOWEVENT:
-                    switch (sdl_event.window.windowEvent)
-                    {
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN:
-                            WindowShown?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN:
-                            WindowHidden?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
-                            WindowClosing?.Invoke(this, EventArgs.Empty);
-                            Close();
-
-                            if (IsMainWindow)
-                            {
-                                SiegeUI_Controller.Destroy();
-                            }
-
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED:
-                            WindowFocusGained?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST:
-                            WindowFocusLost?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED:
-                            WindowMaximized?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED:
-                            WindowMinimized?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
-                            WindowMoved?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
-                            WindowResized?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
-                            WindowSizeChanged?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER:
-                            MouseEntered?.Invoke(this, EventArgs.Empty);
-                            break;
-                        case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE:
-                            MouseExited?.Invoke(this, EventArgs.Empty);
-                            break;
-                    }
-                    break;
-                case SDL.SDL_EventType.SDL_MOUSEMOTION:
-                    SiegeUI_MouseEventArgs mouseEventArgs = new SiegeUI_MouseEventArgs()
-                    {
-                        EventType = SiegeUI_MouseEventArgs.MouseEventType.MouseMoving,
-                        Position = new SiegeUI_Point(sdl_event.motion.x, sdl_event.motion.y)
-                    };
-
-                    MouseMoving?.Invoke(this, mouseEventArgs);
-                    break;
-                case SDL.SDL_EventType.SDL_MOUSEWHEEL:
-                    SiegeUI_MouseEventArgs mouseWheelEventArgs = new SiegeUI_MouseEventArgs()
-                    {
-                        EventType = SiegeUI_MouseEventArgs.MouseEventType.MouseWheel,
-                        WheelDirection = sdl_event.wheel.direction
-                    };
-
-                    MouseWheel?.Invoke(this, mouseWheelEventArgs);
-                    break;
-                case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    SiegeUI_MouseEventArgs mouseDownEventArgs = new SiegeUI_MouseEventArgs()
-                    {
-                        EventType = SiegeUI_MouseEventArgs.MouseEventType.MouseDown,
-                        Button = (SiegeUI_MouseEventArgs.MouseButton)sdl_event.button.button
-                    };
-
-                    MouseDown?.Invoke(this, mouseDownEventArgs);
-                    break;
-                case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
-                    SiegeUI_MouseEventArgs mouseUpEventArgs = new SiegeUI_MouseEventArgs()
-                    {
-                        EventType = SiegeUI_MouseEventArgs.MouseEventType.MouseDown,
-                        Button = (SiegeUI_MouseEventArgs.MouseButton)sdl_event.button.button
-                    };
-
-                    MouseUp?.Invoke(this, mouseUpEventArgs);
-                    break;
-                case SDL.SDL_EventType.SDL_KEYDOWN:
-                    SiegeUI_KeyboardEventArgs keyDownEventArgs = new SiegeUI_KeyboardEventArgs()
-                    {
-                        EventType = SiegeUI_KeyboardEventArgs.KeyboardEventType.KeyDown,
-                        KeyCode = sdl_event.key.keysym.sym
-                    };
-
-                    KeyDown?.Invoke(this, keyDownEventArgs);
-                    break;
-                case SDL.SDL_EventType.SDL_KEYUP:
-                    SiegeUI_KeyboardEventArgs keyUpEventArgs = new SiegeUI_KeyboardEventArgs()
-                    {
-                        EventType = SiegeUI_KeyboardEventArgs.KeyboardEventType.KeyUp,
-                        KeyCode = sdl_event.key.keysym.sym
-                    };
-
-                    KeyUp?.Invoke(this, keyUpEventArgs);
-                    break;
-            }
         }
 
         /// <summary>
