@@ -35,7 +35,7 @@ namespace SiegeUI
         {
             foreach (SiegeUI_Window window in Windows)
             {
-                window.Update();
+                window.Update(window.SDLRenderer);
             }
         }
 

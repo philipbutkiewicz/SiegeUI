@@ -20,9 +20,21 @@ namespace SiegeUI
         public Dictionary<string, SiegeUI_Control> Controls { get; set; } = new Dictionary<string, SiegeUI_Control>();
 
         /// <summary>
+        /// Gets bounds (position & size).
+        /// </summary>
+        public override SiegeUI_Rectangle Bounds
+        {
+            get
+            {
+                SiegeUI_Rectangle windowBounds = GetWindowBounds();
+                return new SiegeUI_Rectangle(0, 0, windowBounds.Width, windowBounds.Height);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets window bounds (position & size).
         /// </summary>
-        public SiegeUI_Rectangle Bounds
+        public SiegeUI_Rectangle WindowBounds
         { 
             get
             {
@@ -48,16 +60,17 @@ namespace SiegeUI
                 SetWindowSizeableStatus(value);
             }
         }
-
+        
         /// <summary>
-        /// Window background color.
+        /// Gets the SDL renderer for the window.
         /// </summary>
-        public SiegeUI_Color BackColor = SiegeUI_Color.DarkGray;
-
-        /// <summary>
-        /// Window foreground color.
-        /// </summary>
-        public SiegeUI_Color ForeColor = SiegeUI_Color.White;
+        public IntPtr SDLRenderer
+        {
+            get
+            {
+                return _sdlRenderer;
+            }
+        }
 
         public
 
@@ -110,11 +123,11 @@ namespace SiegeUI
         /// SiegeUI Window is a container for all controls.
         /// </summary>
         /// <param name="title"></param>
-        /// <param name="bounds"></param>
+        /// <param name="windowBounds"></param>
         /// <param name="windowFlags"></param>
-        public SiegeUI_Window(string title, SiegeUI_Rectangle bounds, WindowFlags windowFlags)
+        public SiegeUI_Window(string title, SiegeUI_Rectangle windowBounds, WindowFlags windowFlags)
         {
-            CreateWindow(title, bounds, windowFlags);
+            CreateWindow(title, windowBounds, windowFlags);
             CreateRenderer();
             SetupRenderer();
         }
@@ -138,23 +151,21 @@ namespace SiegeUI
         /// <summary>
         /// Window update method.
         /// </summary>
-        public override void Update()
+        public override void Update(IntPtr sdlRenderer)
         {
             SDL.SDL_Event sdl_event;
             SDL.SDL_WaitEvent(out sdl_event);
             HandleSDLEvent(sdl_event);
 
-            SDL.SDL_RenderClear(_sdlRenderer);
-
-            new SiegeUI_Rectangle(0, 0, Bounds.Width, Bounds.Height).RenderFilled(_sdlRenderer, BackColor);
+            base.Update(sdlRenderer);
 
             foreach (KeyValuePair<string, SiegeUI_Control> _control in Controls)
             {
-                _control.Value?.Update();
+                _control.Value?.Update(sdlRenderer);
             }
 
             SDL.SDL_UpdateWindowSurface(_sdlWindow);
-            SDL.SDL_RenderPresent(_sdlRenderer);
+            SDL.SDL_RenderPresent(sdlRenderer);
         }
 
 
@@ -222,12 +233,12 @@ namespace SiegeUI
         /// Creates a new SDL_Window and assigns a reference to this object.
         /// </summary>
         /// <param name="title"></param>
-        /// <param name="bounds"></param>
+        /// <param name="windowBounds"></param>
         /// <param name="windowFlags"></param>
         /// <exception cref="Exception"></exception>
-        private void CreateWindow(string title, SiegeUI_Rectangle bounds, WindowFlags windowFlags)
+        private void CreateWindow(string title, SiegeUI_Rectangle windowBounds, WindowFlags windowFlags)
         {
-            _sdlWindow = SDL.SDL_CreateWindow(title, bounds.X, bounds.Y, bounds.Width, bounds.Height, (SDL.SDL_WindowFlags)windowFlags);
+            _sdlWindow = SDL.SDL_CreateWindow(title, windowBounds.X, windowBounds.Y, windowBounds.Width, windowBounds.Height, (SDL.SDL_WindowFlags)windowFlags);
             if (_sdlWindow == IntPtr.Zero)
             {
                 throw new Exception($"Failed to create a new window: {_sdlWindow}");
@@ -273,11 +284,11 @@ namespace SiegeUI
         /// <summary>
         /// Sets window bounds (SDL).
         /// </summary>
-        /// <param name="bounds"></param>
-        private void SetWindowBounds(SiegeUI_Rectangle bounds)
+        /// <param name="windowBounds"></param>
+        private void SetWindowBounds(SiegeUI_Rectangle windowBounds)
         {
-            SDL.SDL_SetWindowPosition(_sdlWindow, bounds.X, bounds.Y);
-            SDL.SDL_SetWindowSize(_sdlWindow, bounds.Width, bounds.Height);
+            SDL.SDL_SetWindowPosition(_sdlWindow, windowBounds.X, windowBounds.Y);
+            SDL.SDL_SetWindowSize(_sdlWindow, windowBounds.Width, windowBounds.Height);
         }
 
         /// <summary>

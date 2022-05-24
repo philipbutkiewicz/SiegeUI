@@ -100,6 +100,25 @@ namespace SiegeUI
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets control bounds (position & size).
+        /// </summary>
+        public virtual SiegeUI_Rectangle Bounds { get; set; } = new SiegeUI_Rectangle();
+
+        /// <summary>
+        /// Background color.
+        /// </summary>
+        public SiegeUI_Color BackColor = SiegeUI_Color.DarkGray;
+
+        /// <summary>
+        /// Foreground color.
+        /// </summary>
+        public SiegeUI_Color ForeColor = SiegeUI_Color.White;
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -125,9 +144,9 @@ namespace SiegeUI
         /// <summary>
         /// Updates the control.
         /// </summary>
-        public virtual void Update()
+        public virtual void Update(IntPtr sdlRenderer)
         {
-
+            new SiegeUI_Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height).RenderFilled(sdlRenderer, BackColor);
         }
 
         /// <summary>
