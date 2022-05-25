@@ -26,6 +26,12 @@ namespace SiegeUI
             {
                 throw new Exception($"Siege UI failed to initialize SDL. SDL_Init failed with code {status}.");
             }
+
+            status = SDL_ttf.TTF_Init();
+            if (status < 0)
+            {
+                throw new Exception($"Siege UI failed to initialize SDL_ttf. TTF_Init failed with code {status}.");
+            }
         }
 
         /// <summary>
@@ -49,6 +55,7 @@ namespace SiegeUI
                 window.Dispose();
             }
 
+            SDL_ttf.TTF_Quit();
             SDL.SDL_Quit();
             Environment.Exit(0);
         }

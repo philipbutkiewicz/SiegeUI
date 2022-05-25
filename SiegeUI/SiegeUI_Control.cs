@@ -110,12 +110,12 @@ namespace SiegeUI
         /// <summary>
         /// Background color.
         /// </summary>
-        public SiegeUI_Color BackColor = SiegeUI_Color.DarkGray;
+        public virtual SiegeUI_Color BackColor { get; set; } = SiegeUI_Color.DarkGray;
 
         /// <summary>
         /// Foreground color.
         /// </summary>
-        public SiegeUI_Color ForeColor = SiegeUI_Color.White;
+        public virtual SiegeUI_Color ForeColor { get; set; } = SiegeUI_Color.White;
 
         #endregion
 

@@ -56,7 +56,7 @@ namespace SiegeUI.Drawing
             SDL.SDL_GetRenderDrawColor(_sdlRenderer, out _r, out _g, out _b, out _a);
             SDL.SDL_SetRenderDrawColor(_sdlRenderer, color.R, color.G, color.B, color.A);
 
-            SDL.SDL_Rect rect = GetSDL_Rect();
+            SDL.SDL_Rect rect = ToSDLRect();
             SDL.SDL_RenderDrawRect(_sdlRenderer, ref rect);
 
             SDL.SDL_SetRenderDrawColor(_sdlRenderer, _r, _g, _b, _a);
@@ -73,21 +73,17 @@ namespace SiegeUI.Drawing
             SDL.SDL_GetRenderDrawColor(_sdlRenderer, out _r, out _g, out _b, out _a);
             SDL.SDL_SetRenderDrawColor(_sdlRenderer, color.R, color.G, color.B, color.A);
 
-            SDL.SDL_Rect rect = GetSDL_Rect();
+            SDL.SDL_Rect rect = ToSDLRect();
             SDL.SDL_RenderFillRect(_sdlRenderer, ref rect);
 
             SDL.SDL_SetRenderDrawColor(_sdlRenderer, _r, _g, _b, _a);
         }
 
-        #endregion
-
-        #region Private methods
-
         /// <summary>
         /// Returns SDL_Rect
         /// </summary>
         /// <returns></returns>
-        private SDL.SDL_Rect GetSDL_Rect()
+        public SDL.SDL_Rect ToSDLRect()
         {
             SDL.SDL_Rect rect = new SDL.SDL_Rect();
             rect.x = X;

@@ -7,6 +7,7 @@
     <Company>$(Authors)</Company>
     <Authors>bagnz0r</Authors>
     <Platforms>AnyCPU;x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

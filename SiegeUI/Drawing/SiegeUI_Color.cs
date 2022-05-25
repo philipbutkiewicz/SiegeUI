@@ -1,4 +1,6 @@
-﻿namespace SiegeUI.Drawing
+﻿using SDL2;
+
+namespace SiegeUI.Drawing
 {
     public class SiegeUI_Color
     {
@@ -11,6 +13,8 @@
         public static SiegeUI_Color Gray = new SiegeUI_Color(0xccccccff);
 
         public static SiegeUI_Color White = new SiegeUI_Color(0xffffffff);
+
+        public static SiegeUI_Color Transparent = new SiegeUI_Color(0x00000000);
 
         #endregion
 
@@ -65,6 +69,21 @@
             G = (byte)(hex >> 16);
             B = (byte)(hex >> 24);
             A = (byte)(hex >> 32);
+        }
+
+        /// <summary>
+        /// Convert to SDL_Color.
+        /// </summary>
+        /// <returns></returns>
+        public SDL.SDL_Color ToSDLColor()
+        {
+            return new SDL.SDL_Color()
+            {
+                a = A,
+                r = R,
+                g = G,
+                b = B
+            };
         }
 
         #endregion
