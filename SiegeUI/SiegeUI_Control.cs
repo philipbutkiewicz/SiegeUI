@@ -129,15 +129,6 @@ namespace SiegeUI
 
         #endregion
 
-        #region Fields
-
-        /// <summary>
-        /// Textures associated with this control.
-        /// </summary>
-        protected Dictionary<string, IntPtr> _textures = new Dictionary<string, IntPtr>();
-
-        #endregion
-
         #region Public methods
 
         public SiegeUI_Control(SiegeUI_Control parent = null)
@@ -150,9 +141,9 @@ namespace SiegeUI
         /// </summary>
         public virtual void Dispose()
         {
-            foreach (KeyValuePair<string, IntPtr> _texture in _textures)
+            foreach (KeyValuePair<string, SiegeUI_Control> child in Children)
             {
-                SDL.SDL_DestroyTexture(_texture.Value);
+                child.Value?.Dispose();
             }
         }
 
@@ -162,6 +153,11 @@ namespace SiegeUI
         public virtual void Update(IntPtr sdlRenderer)
         {
             new SiegeUI_Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height).RenderFilled(sdlRenderer, BackColor);
+
+            foreach (KeyValuePair<string, SiegeUI_Control> child in Children)
+            {
+                child.Value?.Update(sdlRenderer);
+            }
         }
 
         /// <summary>
