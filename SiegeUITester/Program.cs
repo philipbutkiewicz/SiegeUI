@@ -9,7 +9,8 @@ SiegeUI_Label label = new SiegeUI_Label()
 {
     Text = "Hello world",
     Bounds = new SiegeUI_Rectangle(32, 32, 0, 0),
-    Shadow = true
+    Shadow = true,
+    Parent = mainWindow
 };
 
 mainWindow.Controls.Add("label1", label);

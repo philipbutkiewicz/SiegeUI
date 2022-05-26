@@ -103,6 +103,16 @@ namespace SiegeUI
         #region Properties
 
         /// <summary>
+        /// Control parent.
+        /// </summary>
+        public SiegeUI_Control Parent { get; set; } = null;
+
+        /// <summary>
+        /// Control children.
+        /// </summary>
+        public Dictionary<string, SiegeUI_Control> Children = new Dictionary<string, SiegeUI_Control>();
+
+        /// <summary>
         /// Gets or sets control bounds (position & size).
         /// </summary>
         public virtual SiegeUI_Rectangle Bounds { get; set; } = new SiegeUI_Rectangle();
@@ -129,6 +139,11 @@ namespace SiegeUI
         #endregion
 
         #region Public methods
+
+        public SiegeUI_Control(SiegeUI_Control parent = null)
+        {
+            Parent = parent;
+        }
 
         /// <summary>
         /// Disposes of this control.
