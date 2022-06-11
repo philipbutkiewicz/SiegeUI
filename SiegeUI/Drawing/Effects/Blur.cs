@@ -2,7 +2,7 @@
 
 namespace SiegeUI.Drawing.Effects
 {
-    public class SiegeUI_Blur
+    public class Blur
     {
         #region Public methods
 

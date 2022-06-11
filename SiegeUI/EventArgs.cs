@@ -3,9 +3,9 @@ using SiegeUI.Drawing;
 
 namespace SiegeUI
 {
-    public  class SiegeUI_EventArgs
+    public class EventArgs
     {
-        public class SiegeUI_MouseEventArgs : EventArgs
+        public class SiegeUI_MouseEventArgs : System.EventArgs
         {
             #region Enums
 
@@ -45,7 +45,7 @@ namespace SiegeUI
             /// <summary>
             /// Mouse position.
             /// </summary>
-            public SiegeUI_Point Position = new SiegeUI_Point();
+            public Point Position = new Point();
 
             /// <summary>
             /// Mouse button.
@@ -58,9 +58,14 @@ namespace SiegeUI
             public uint WheelDirection = 0;
 
             #endregion
+
+            public override string ToString()
+            {
+                return $"{base.ToString()} {{ EventType: = {EventType}, Position: {Position} }}";
+            }
         }
 
-        public class SiegeUI_KeyboardEventArgs : EventArgs
+        public class SiegeUI_KeyboardEventArgs : System.EventArgs
         {
             #region Enums
 
@@ -89,6 +94,11 @@ namespace SiegeUI
             public SDL.SDL_Keycode KeyCode;
 
             #endregion
+
+            public override string ToString()
+            {
+                return $"{base.ToString()} {{ EventType: = {EventType}, KeyCode: {KeyCode} }}";
+            }
         }
     }
 }

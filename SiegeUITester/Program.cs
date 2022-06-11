@@ -2,22 +2,39 @@
 using SiegeUI.Controls;
 using SiegeUI.Drawing;
 
-SiegeUI_Controller.Init();
+Controller.Init();
 
-SiegeUI_Window mainWindow = new SiegeUI_Window("SiegeUITester", new SiegeUI_Rectangle(64, 64, 1280, 720), SiegeUI_Window.WindowFlags.Sizeable);
-SiegeUI_Label label = new SiegeUI_Label()
+Window mainWindow = new Window(null!, "SiegeUITester", new Rectangle(64, 64, 1280, 720), Window.WindowFlags.Sizeable);
+
+Panel panel = new Panel(mainWindow)
 {
-    Text = "Hello world",
-    Bounds = new SiegeUI_Rectangle(32, 32, 0, 0),
-    Shadow = true,
-    Parent = mainWindow
+    Bounds = new Rectangle(32, 32, 256, 160)
 };
 
-mainWindow.Controls.Add("label1", label);
+mainWindow.Children.Add("panel1", panel);
 
-SiegeUI_Controller.Windows.Add(mainWindow);
+Label label = new Label(panel)
+{
+    Text = "Hello world",
+    Bounds = new Rectangle(32, 32, 0, 0),
+    Shadow = true,
+    Docking = Control.DockingMode.Top,
+    Align = Text.TextAlign.Middle
+};
+panel.Children.Add("label1", label);
+
+Button button = new Button(panel)
+{
+    Text = "Button",
+    Bounds = new Rectangle(32, 64, 58, 24),
+    TextShadow = false,
+    Docking = Control.DockingMode.Bottom
+};
+panel.Children.Add("button1", button);
+
+Controller.Windows.Add(mainWindow);
 
 for (; ;)
 {
-    SiegeUI_Controller.Update();
+    Controller.Update();
 }

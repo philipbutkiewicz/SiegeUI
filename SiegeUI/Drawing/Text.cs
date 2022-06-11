@@ -2,21 +2,39 @@
 
 namespace SiegeUI.Drawing
 {
-    public class SiegeUI_Text
+    public class Text
     {
+        #region Enums
+
+        public enum TextAlign
+        {
+            None,
+            TopLeft,
+            TopMiddle,
+            TopRight,
+            BottomLeft,
+            BottomMiddle,
+            BottomRight,
+            MiddleLeft,
+            MiddleRight,
+            Middle
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Text to render.
         /// </summary>
-        public string Text {
+        public string Content {
             get
             {
-                return _text;
+                return _content;
             }
             set
             {
-                _text = value;
+                _content = value;
                 _textureNeedsUpdating = true;
             }
         }
@@ -24,7 +42,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Rendering bounds.
         /// </summary>
-        public SiegeUI_Rectangle Bounds
+        public Rectangle Bounds
         {
             get
             {
@@ -32,11 +50,57 @@ namespace SiegeUI.Drawing
             }
             set
             {
-                _bounds = value;
                 if (value.Width != _bounds.Width || value.Height != _bounds.Height)
                 {
                     _textureNeedsUpdating = true;
                 }
+
+                _bounds = value;
+            }
+        }
+
+        /// <summary>
+        /// Text padding.
+        /// </summary>
+        public Quad Padding
+        {
+            get
+            {
+                return _padding;
+            }
+            set
+            {
+                _padding = value;
+            }
+        }
+
+        /// <summary>
+        /// Text alignment (AlignToBounds must be assigned).
+        /// </summary>
+        public TextAlign Align
+        {
+            get
+            {
+                return _align;
+            }
+            set
+            {
+                _align = value;
+            }
+        }
+
+        /// <summary>
+        /// Bounds to align to.
+        /// </summary>
+        public Rectangle AlignToBounds
+        {
+            get
+            {
+                return _alignToBounds;
+            }
+            set
+            {
+                _alignToBounds = value;
             }
         }
 
@@ -75,7 +139,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Background color.
         /// </summary>
-        public SiegeUI_Color BackColor
+        public Color BackColor
         {
             get
             {
@@ -91,7 +155,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Foreground color.
         /// </summary>
-        public SiegeUI_Color ForeColor
+        public Color ForeColor
         {
             get
             {
@@ -107,7 +171,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Shadow color.
         /// </summary>
-        public SiegeUI_Color ShadowColor
+        public Color ShadowColor
         {
             get
             {
@@ -123,7 +187,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Shadow offset position.
         /// </summary>
-        public SiegeUI_Point ShadowOffset
+        public Point ShadowOffset
         {
             get
             {
@@ -191,42 +255,57 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Text to render.
         /// </summary>
-        string _text = "";
+        string _content = "";
 
         /// <summary>
         /// Rendering bounds.
         /// </summary>
-        SiegeUI_Rectangle _bounds = new SiegeUI_Rectangle();
+        Rectangle _bounds = new Rectangle();
+
+        /// <summary>
+        /// Text padding.
+        /// </summary>
+        Quad _padding = new Quad();
+
+        /// <summary>
+        /// Text alignment.
+        /// </summary>
+        TextAlign _align = TextAlign.None;
+
+        /// <summary>
+        /// Bounds to align to.
+        /// </summary>
+        Rectangle _alignToBounds = new Rectangle();
 
         /// <summary>
         /// Foint size (in points).
         /// </summary>
-        int _fontSize = 18;
+        int _fontSize = 14;
 
         /// <summary>
         /// Font to use.
         /// </summary>
-        string _font = SiegeUI_Text_Font.SiegeUI_Text_Font_Roboto.Medium;
+        string _font = Drawing.Font.SiegeUI_Text_Font_Roboto.Medium;
 
         /// <summary>
         /// Background color.
         /// </summary>
-        SiegeUI_Color _backColor = SiegeUI_Color.Transparent;
+        Color _backColor = Color.Transparent;
 
         /// <summary>
         /// Foreground color.
         /// </summary>
-        SiegeUI_Color _foreColor = SiegeUI_Color.White;
+        Color _foreColor = Color.White;
 
         /// <summary>
         /// Shadow color.
         /// </summary>
-        SiegeUI_Color _shadowColor = new SiegeUI_Color(0x00000088);
+        Color _shadowColor = new Color(0x00000088);
 
         /// <summary>
         /// Shadow offset position.
         /// </summary>
-        SiegeUI_Point _shadowOffset = new SiegeUI_Point(2, 2);
+        Point _shadowOffset = new Point(2, 2);
 
         /// <summary>
         /// Shadow blur.
@@ -270,7 +349,7 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Creates a new Text object.
         /// </summary>
-        public SiegeUI_Text()
+        public Text()
         {
         }
 
@@ -279,9 +358,9 @@ namespace SiegeUI.Drawing
         /// </summary>
         /// <param name="text"></param>
         /// <param name="bounds"></param>
-        public SiegeUI_Text(string text, SiegeUI_Rectangle bounds)
+        public Text(string text, Rectangle bounds)
         {
-            Text = text;
+            Content = text;
             Bounds = bounds;
         }
 
@@ -294,6 +373,16 @@ namespace SiegeUI.Drawing
             if (_textureNeedsUpdating)
             {
                 UpdateTexture(sdlRenderer);
+            }
+
+            if (_autoSize)
+            {
+                AutoSizeBounds();
+            }
+
+            if (_align != TextAlign.None)
+            {
+                AlignBounds();
             }
 
             SDL.SDL_Rect rect = Bounds.ToSDLRect();
@@ -324,13 +413,9 @@ namespace SiegeUI.Drawing
         void UpdateTexture(IntPtr sdlRenderer)
         {
             LoadCurrentFont();
-            if (_autoSize)
-            {
-                AutoSizeBounds();
-            }
 
-            IntPtr textSurface = BackColor == SiegeUI_Color.Transparent ? SDL_ttf.TTF_RenderText_Blended(_ttfFont, _text, _foreColor.ToSDLColor()) :
-                SDL_ttf.TTF_RenderText_Shaded(_ttfFont, Text, _foreColor.ToSDLColor(), _backColor.ToSDLColor());
+            IntPtr textSurface = BackColor == Color.Transparent ? SDL_ttf.TTF_RenderText_Blended(_ttfFont, _content, _foreColor.ToSDLColor()) :
+                SDL_ttf.TTF_RenderText_Shaded(_ttfFont, Content, _foreColor.ToSDLColor(), _backColor.ToSDLColor());
 
             _sdlTexture = _shadow ? GenerateTextureWithShadow(sdlRenderer, textSurface) : GenerateTexture(sdlRenderer, textSurface);
             _textureNeedsUpdating = false;
@@ -358,11 +443,11 @@ namespace SiegeUI.Drawing
         /// <returns></returns>
         unsafe IntPtr GenerateTextureWithShadow(IntPtr sdlRenderer, IntPtr textSurface)
         {
-            IntPtr shadowSurface = SDL_ttf.TTF_RenderText_Blended(_ttfFont, _text, SiegeUI_Color.Black.ToSDLColor());
-            Effects.SiegeUI_Blur.Box(shadowSurface, _shadowBlur);
+            IntPtr shadowSurface = SDL_ttf.TTF_RenderText_Blended(_ttfFont, _content, Color.Black.ToSDLColor());
+            Effects.Blur.Box(shadowSurface, _shadowBlur);
 
             SDL.SDL_Surface * shadowSurfaceRef = (SDL.SDL_Surface*)shadowSurface;
-            SDL.SDL_Rect shadowRect = new SiegeUI_Rectangle(1, 1, shadowSurfaceRef->w, shadowSurfaceRef->h).ToSDLRect();
+            SDL.SDL_Rect shadowRect = new Rectangle(1, 1, shadowSurfaceRef->w, shadowSurfaceRef->h).ToSDLRect();
 
             SDL.SDL_PixelFormat* pixelFormatRef = (SDL.SDL_PixelFormat*)shadowSurfaceRef->format;
             IntPtr targetSurface = SDL.SDL_CreateRGBSurface(shadowSurfaceRef->flags,
@@ -389,7 +474,7 @@ namespace SiegeUI.Drawing
         void AutoSizeBounds()
         {
             int width, height;
-            SDL_ttf.TTF_SizeText(_ttfFont, Text, out width, out height);
+            SDL_ttf.TTF_SizeText(_ttfFont, Content, out width, out height);
 
             if (_shadow)
             {
@@ -397,7 +482,52 @@ namespace SiegeUI.Drawing
                 height += _shadowOffset.Y * _shadowBlur;
             }
 
-            Bounds = new SiegeUI_Rectangle(_bounds.X, Bounds.Y, width, height);
+            Bounds = new Rectangle(_bounds.X, Bounds.Y, width, height);
+        }
+
+        void AlignBounds()
+        {
+            if (_alignToBounds.Width == 0 || _alignToBounds.Height == 0) return;
+
+            switch (_align)
+            {
+                case TextAlign.TopLeft:
+                    _bounds.X = _alignToBounds.X + _padding.Left;
+                    _bounds.Y = _alignToBounds.Y + _padding.Top;
+                    break;
+                case TextAlign.TopMiddle:
+                    _bounds.X = _alignToBounds.X + ((_alignToBounds.Width / 2) - (_bounds.Width / 2));
+                    _bounds.Y = _alignToBounds.Y + _padding.Top;
+                    break;
+                case TextAlign.TopRight:
+                    _bounds.X = (_alignToBounds.X + (_alignToBounds.Width - _bounds.Width)) - _padding.Right;
+                    _bounds.Y = _alignToBounds.Y + _padding.Top;
+                    break;
+                case TextAlign.MiddleLeft:
+                    _bounds.X = _alignToBounds.X + _padding.Left;
+                    _bounds.Y = _alignToBounds.Y + ((_alignToBounds.Height / 2) - (_bounds.Height / 2));
+                    break;
+                case TextAlign.Middle:
+                    _bounds.X = _alignToBounds.X + (_alignToBounds.Width / 2) - (_bounds.Width / 2);
+                    _bounds.Y = _alignToBounds.Y + ((_alignToBounds.Height / 2) - (_bounds.Height / 2));
+                    break;
+                case TextAlign.MiddleRight:
+                    _bounds.X = (_alignToBounds.X + (_alignToBounds.Width - _bounds.Width)) - _padding.Right;
+                    _bounds.Y = _alignToBounds.Y + ((_alignToBounds.Height / 2) - (_bounds.Height / 2));
+                    break;
+                case TextAlign.BottomLeft:
+                    _bounds.X = _alignToBounds.X + _padding.Left;
+                    _bounds.Y = (_alignToBounds.Y + (_alignToBounds.Height - _bounds.Height)) - _padding.Bottom;
+                    break;
+                case TextAlign.BottomMiddle:
+                    _bounds.X = _alignToBounds.X + ((_alignToBounds.Width / 2) - (_bounds.Width / 2));
+                    _bounds.Y = (_alignToBounds.Y + (_alignToBounds.Height - _bounds.Height)) - _padding.Bottom;
+                    break;
+                case TextAlign.BottomRight:
+                    _bounds.X = (_alignToBounds.X + (_alignToBounds.Width - _bounds.Width)) - _padding.Right;
+                    _bounds.Y = (_alignToBounds.Y + (_alignToBounds.Height - _bounds.Height)) - _padding.Bottom;
+                    break;
+            }
         }
 
         #endregion

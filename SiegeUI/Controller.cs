@@ -2,14 +2,14 @@
 
 namespace SiegeUI
 {
-    public static class SiegeUI_Controller
+    public static class Controller
     {
         #region Properties
 
         /// <summary>
         /// Dictionary of all the windows in the application.
         /// </summary>
-        public static List<SiegeUI_Window> Windows { get; set; } = new List<SiegeUI_Window>();
+        public static List<Window> Windows { get; set; } = new List<Window>();
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace SiegeUI
         /// </summary>
         public static void Update()
         {
-            foreach (SiegeUI_Window window in Windows)
+            foreach (Window window in Windows)
             {
                 window.Update(window.SDLRenderer);
             }
@@ -50,7 +50,7 @@ namespace SiegeUI
         /// </summary>
         public static void Destroy()
         {
-            foreach (SiegeUI_Window window in Windows)
+            foreach (Window window in Windows)
             {
                 window.Dispose();
             }

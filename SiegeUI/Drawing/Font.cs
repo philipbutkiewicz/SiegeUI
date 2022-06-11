@@ -1,6 +1,6 @@
 ﻿namespace SiegeUI.Drawing
 {
-    public class SiegeUI_Text_Font
+    public class Font
     {
         public class SiegeUI_Text_Font_FiraCode
         {
