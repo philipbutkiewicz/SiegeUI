@@ -1,16 +1,16 @@
 ﻿namespace SiegeUI.Drawing
 {
-    public  class SiegeUI_Point
+    public  class Point
     {
         #region Properties
 
         /// <summary>
-        /// Rectangle X position (lop).
+        /// Point X position (left).
         /// </summary>
         public int X { get; set; } = 0;
 
         /// <summary>
-        /// Rectangle Y position (top).
+        /// Point Y position (top).
         /// </summary>
         public int Y { get; set; } = 0;
 
@@ -23,10 +23,15 @@
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public SiegeUI_Point(int x = 0, int y = 0)
+        public Point(int x = 0, int y = 0)
         {
             X = x;
             Y = y;
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()} {{ X: = {X}, Y: {Y} }}";
         }
 
         #endregion

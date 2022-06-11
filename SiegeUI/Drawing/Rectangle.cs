@@ -2,12 +2,12 @@
 
 namespace SiegeUI.Drawing
 {
-    public class SiegeUI_Rectangle
+    public class Rectangle
     {
         #region Properties
 
         /// <summary>
-        /// Rectangle X position (lop).
+        /// Rectangle X position (left).
         /// </summary>
         public int X { get; set; } = 0;
 
@@ -37,7 +37,7 @@ namespace SiegeUI.Drawing
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public SiegeUI_Rectangle(int x = 0, int y = 0, int width = 0, int height = 0)
+        public Rectangle(int x = 0, int y = 0, int width = 0, int height = 0)
         {
             X = x;
             Y = y;
@@ -50,7 +50,7 @@ namespace SiegeUI.Drawing
         /// </summary>
         /// <param name="_sdlRenderer"></param>
         /// <param name="color"></param>
-        public void Render(IntPtr _sdlRenderer, SiegeUI_Color color)
+        public void Render(IntPtr _sdlRenderer, Color color)
         {
             byte _r, _g, _b, _a;
             SDL.SDL_GetRenderDrawColor(_sdlRenderer, out _r, out _g, out _b, out _a);
@@ -67,7 +67,7 @@ namespace SiegeUI.Drawing
         /// </summary>
         /// <param name="_sdlRenderer"></param>
         /// <param name="color"></param>
-        public void RenderFilled(IntPtr _sdlRenderer, SiegeUI_Color color)
+        public void RenderFilled(IntPtr _sdlRenderer, Color color)
         {
             byte _r, _g, _b, _a;
             SDL.SDL_GetRenderDrawColor(_sdlRenderer, out _r, out _g, out _b, out _a);
@@ -92,6 +92,11 @@ namespace SiegeUI.Drawing
             rect.h = Height;
 
             return rect;
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()} {{ X: {X}, Y: {Y}, Width: {Width}, Height: {Height} }}";
         }
 
         #endregion

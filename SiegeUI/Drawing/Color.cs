@@ -2,19 +2,23 @@
 
 namespace SiegeUI.Drawing
 {
-    public class SiegeUI_Color
+    public class Color
     {
         #region Static properties
 
-        public static SiegeUI_Color Black = new SiegeUI_Color(0x000000ff);
+        public static Color Black = new Color(0x000000ff);
 
-        public static SiegeUI_Color DarkGray = new SiegeUI_Color(0x999999ff);
+        public static Color DarkGray = new Color(0x888888ff);
 
-        public static SiegeUI_Color Gray = new SiegeUI_Color(0xccccccff);
+        public static Color MediumGray = new Color(0xaaaaaaff);
 
-        public static SiegeUI_Color White = new SiegeUI_Color(0xffffffff);
+        public static Color Gray = new Color(0xccccccff);
 
-        public static SiegeUI_Color Transparent = new SiegeUI_Color(0x00000000);
+        public static Color LightGray = new Color(0xeeeeeeff);
+
+        public static Color White = new Color(0xffffffff);
+
+        public static Color Transparent = new Color(0x00000000);
 
         #endregion
 
@@ -51,7 +55,7 @@ namespace SiegeUI.Drawing
         /// <param name="g"></param>
         /// <param name="b"></param>
         /// <param name="a"></param>
-        public SiegeUI_Color(byte r, byte g, byte b, byte a = 255)
+        public Color(byte r, byte g, byte b, byte a = 255)
         {
             R = r;
             G = g;
@@ -63,7 +67,7 @@ namespace SiegeUI.Drawing
         /// Color object (from hex value).
         /// </summary>
         /// <param name="hex">ie. 0x000000ff = rgba(0, 0, 0, 255)</param>
-        public SiegeUI_Color(uint hex = 0xffaaccbb)
+        public Color(uint hex = 0xffaaccbb)
         {
             R = (byte)(hex >> 8);
             G = (byte)(hex >> 16);

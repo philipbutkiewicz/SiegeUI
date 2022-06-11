@@ -1,8 +1,9 @@
 ﻿using SiegeUI.Drawing;
+using static SiegeUI.Drawing.Text;
 
 namespace SiegeUI.Controls
 {
-    public class SiegeUI_Label : SiegeUI_Control
+    public class Label : Control
     {
         #region Properties
 
@@ -13,29 +14,58 @@ namespace SiegeUI.Controls
         {
             get
             {
-                return _siegeUI_Text.Text;
+                return _text.Content;
             }
             set
             {
-                _siegeUI_Text.Text = value;
+                _text.Content = value;
             }
         }
 
         /// <summary>
         /// Rendering bounds.
         /// </summary>
-        public override SiegeUI_Rectangle Bounds
+        public override Rectangle Bounds
         {
             get
             {
-                return _siegeUI_Text.Bounds;
+                return _text.Bounds;
             }
             set
             {
-                _siegeUI_Text.Bounds = value;
+                _text.Bounds = value;
             }
         }
 
+        /// <summary>
+        /// Text padding.
+        /// </summary>
+        public Quad Padding
+        {
+            get
+            {
+                return _text.Padding;
+            }
+            set
+            {
+                _text.Padding = value;
+            }
+        }
+
+        /// <summary>
+        /// Text alignment (AlignToBounds must be assigned).
+        /// </summary>
+        public TextAlign Align
+        {
+            get
+            {
+                return _text.Align;
+            }
+            set
+            {
+                _text.Align = value;
+            }
+        }
 
         /// <summary>
         /// Foint size (in points).
@@ -44,11 +74,11 @@ namespace SiegeUI.Controls
         {
             get
             {
-                return _siegeUI_Text.FontSize;
+                return _text.FontSize;
             }
             set
             {
-                _siegeUI_Text.FontSize = value;
+                _text.FontSize = value;
             }
         }
 
@@ -59,71 +89,71 @@ namespace SiegeUI.Controls
         {
             get
             {
-                return _siegeUI_Text.Font;
+                return _text.Font;
             }
             set
             {
-                _siegeUI_Text.Font = value;
+                _text.Font = value;
             }
         }
 
         /// <summary>
         /// Background color.
         /// </summary>
-        public override SiegeUI_Color BackColor
+        public override Color BackColor
         {
             get
             {
-                return _siegeUI_Text.BackColor;
+                return _text.BackColor;
             }
             set
             {
-                _siegeUI_Text.BackColor = value;
+                _text.BackColor = value;
             }
         }
 
         /// <summary>
         /// Foreground color.
         /// </summary>
-        public override SiegeUI_Color ForeColor
+        public override Color ForeColor
         {
             get
             {
-                return _siegeUI_Text.ForeColor;
+                return _text.ForeColor;
             }
             set
             {
-                _siegeUI_Text.ForeColor = value;
+                _text.ForeColor = value;
             }
         }
 
         /// <summary>
         /// Shadow color.
         /// </summary>
-        public SiegeUI_Color ShadowColor
+        public Color ShadowColor
         {
             get
             {
-                return _siegeUI_Text.ShadowColor;
+                return _text.ShadowColor;
             }
             set
             {
-                _siegeUI_Text.ShadowColor = value;
+                _text.ShadowColor = value;
             }
         }
 
         /// <summary>
         /// Shadow offset position.
         /// </summary>
-        public SiegeUI_Point ShadowOffset
+        public Point ShadowOffset
         {
             get
             {
-                return _siegeUI_Text.ShadowOffset;
+                return _text.ShadowOffset;
             }
             set
             {
-                _siegeUI_Text.ShadowOffset = value;
+                _text.ShadowOffset = value;
             }
         }
 
@@ -134,11 +164,11 @@ namespace SiegeUI.Controls
         {
             get
             {
-                return _siegeUI_Text.ShadowBlur;
+                return _text.ShadowBlur;
             }
             set
             {
-                _siegeUI_Text.ShadowBlur = value;
+                _text.ShadowBlur = value;
             }
         }
 
@@ -149,11 +179,26 @@ namespace SiegeUI.Controls
         {
             get
             {
-                return _siegeUI_Text.Shadow;
+                return _text.Shadow;
             }
             set
             {
-                _siegeUI_Text.Shadow = value;
+                _text.Shadow = value;
+            }
+        }
+
+        /// <summary>
+        /// Should the bounds automatically scale according to text size?
+        /// </summary>
+        public bool AutoSize
+        {
+            get
+            {
+                return _text.AutoSize;
+            }
+            set
+            {
+                _text.AutoSize = value;
             }
         }
 
@@ -164,19 +209,27 @@ namespace SiegeUI.Controls
         /// <summary>
         /// Reference to the SiegeUI Text object.
         /// </summary>
-        SiegeUI_Text _siegeUI_Text = new SiegeUI_Text();
+        Text _text = new Text();
 
         #endregion
 
         #region Public methods
 
+        public Label(Control parent) : base(parent)
+        {
+        }
+
         /// <summary>
         /// Updates the control.
         /// </summary>
         /// <param name="sdlRenderer"></param>
-        public override void Update(IntPtr sdlRenderer)
+        public override void Update(IntPtr sdlRenderer, bool renderBackground = true)
         {
-            _siegeUI_Text.Render(sdlRenderer);
+            base.Update(sdlRenderer, renderBackground);
+
+            _text.AlignToBounds = Bounds;
+
+            _text.Render(sdlRenderer);
         }
 
         #endregion
