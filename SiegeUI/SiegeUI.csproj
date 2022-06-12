@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bagnz0r.SDL2-CS" Version="1.0.2" />
+    <PackageReference Include="bagnz0r.SDL2-CS" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
