@@ -18,6 +18,8 @@ namespace SiegeUI.Drawing
 
         public static Color White = new Color(0xffffffff);
 
+        public static Color Green = new Color(0x00bb00ff);
+
         public static Color Transparent = new Color(0x00000000);
 
         #endregion

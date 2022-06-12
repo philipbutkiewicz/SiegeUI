@@ -5,7 +5,7 @@ namespace SiegeUI
 {
     public class EventArgs
     {
-        public class SiegeUI_MouseEventArgs : System.EventArgs
+        public class MouseEventArgs : System.EventArgs
         {
             #region Enums
 
@@ -40,7 +40,7 @@ namespace SiegeUI
             /// <summary>
             /// Mouse event type.
             /// </summary>
-            public MouseEventType EventType = SiegeUI_MouseEventArgs.MouseEventType.None;
+            public MouseEventType EventType = MouseEventArgs.MouseEventType.None;
 
             /// <summary>
             /// Mouse position.
@@ -65,7 +65,7 @@ namespace SiegeUI
             }
         }
 
-        public class SiegeUI_KeyboardEventArgs : System.EventArgs
+        public class KeyboardEventArgs : System.EventArgs
         {
             #region Enums
 
@@ -86,7 +86,7 @@ namespace SiegeUI
             /// <summary>
             /// Keyboard event type.
             /// </summary>
-            public KeyboardEventType EventType = SiegeUI_KeyboardEventArgs.KeyboardEventType.None;
+            public KeyboardEventType EventType = KeyboardEventArgs.KeyboardEventType.None;
 
             /// <summary>
             /// Key code.

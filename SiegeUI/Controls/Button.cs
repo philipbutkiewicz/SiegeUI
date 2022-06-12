@@ -25,22 +25,67 @@ namespace SiegeUI.Controls
         /// <summary>
         /// Background color.
         /// </summary>
-        public new Color BackColor = Color.Gray;
+        public new Color BackColor
+        { 
+            get
+            { 
+                return _backColor; 
+            }
+            set 
+            {
+                _backColor = value; 
+            } 
+        }
 
         /// <summary>
         /// Foreground color.
         /// </summary>
-        public new Color ForeColor = Color.DarkGray;
+        public new Color ForeColor
+        {
+            get
+            {
+                return _foreColor;
+            }
+            set
+            {
+                _foreColor = value;
+            }
+        }
 
         /// <summary>
         /// Border color.
         /// </summary>
-        public Color BorderColor = Color.MediumGray;
+        public Color BorderColor
+        {
+            get
+            {
+                return _borderColor;
+            }
+            set
+            {
+                _borderColor = value;
+            }
+        }
 
         /// <summary>
         /// Border size.
         /// </summary>
-        public int BorderSize = 1;
+        public int BorderSize
+        {
+            get
+            {
+                return _borderSize;
+            }
+            set
+            {
+                if (value < 0 || value > 100)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
+                _borderSize = value;
+            }
+        }
 
         /// <summary>
         /// Foint size (in points).
@@ -53,6 +98,11 @@ namespace SiegeUI.Controls
             }
             set
             {
+                if (value < 0 || value > 1024)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
                 _text.FontSize = value;
             }
         }
@@ -113,6 +163,11 @@ namespace SiegeUI.Controls
             }
             set
             {
+                if (value < 0 || value > 128)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
                 _text.ShadowBlur = value;
             }
         }
@@ -141,6 +196,26 @@ namespace SiegeUI.Controls
         /// </summary>
         Text _text = new Text();
 
+        /// <summary>
+        /// Background color.
+        /// </summary>
+        Color _backColor = Color.Gray;
+
+        /// <summary>
+        /// Foreground color.
+        /// </summary>
+        Color _foreColor = Color.DarkGray;
+
+        /// <summary>
+        /// Border color.
+        /// </summary>
+        Color _borderColor = Color.MediumGray;
+
+        /// <summary>
+        /// Border size.
+        /// </summary>
+        int _borderSize = 1;
+
         bool _mouseEntered = false;
 
         bool _mouseDown = false;
@@ -157,8 +232,13 @@ namespace SiegeUI.Controls
             MouseUp += Button_MouseUp;
         }
 
-        ~Button()
+        /// <summary>
+        /// Disposes of this object.
+        /// </summary>
+        public override void Dispose()
         {
+            base.Dispose();
+
             MouseEntered -= Button_MouseEntered;
             MouseExited -= Button_MouseExited;
             MouseDown -= Button_MouseDown;
@@ -175,15 +255,15 @@ namespace SiegeUI.Controls
             base.Update(sdlRenderer, false);
 
             _text.Bounds = new Rectangle(Bounds.X, Bounds.Y, 0, 0);
-            _text.ForeColor = ForeColor;
+            _text.ForeColor = _foreColor;
             _text.AlignToBounds = Bounds;
             _text.Align = Drawing.Text.TextAlign.Middle;
             _text.AutoSize = true;
 
             if (renderBackground)
             {
-                Color borderColor = BorderColor;
-                Color backColor = BackColor;
+                Color borderColor = _borderColor;
+                Color backColor = _backColor;
 
                 if (_mouseEntered)
                 {
@@ -199,8 +279,12 @@ namespace SiegeUI.Controls
 
                 Bounds.RenderFilled(sdlRenderer, borderColor);
 
-                new Rectangle(Bounds.X + BorderSize, Bounds.Y + BorderSize,
-                    Bounds.Width - (BorderSize * 2), Bounds.Height - (BorderSize * 2)).RenderFilled(sdlRenderer, backColor);
+                new Rectangle(
+                    Bounds.X + _borderSize,
+                    Bounds.Y + _borderSize,
+                    Bounds.Width - (_borderSize * 2),
+                    Bounds.Height - (_borderSize * 2)
+                ).RenderFilled(sdlRenderer, backColor);
             }
 
             _text.Render(sdlRenderer);
@@ -210,12 +294,12 @@ namespace SiegeUI.Controls
 
         #region Private methods
 
-        void Button_MouseUp(object? sender, EventArgs.SiegeUI_MouseEventArgs e)
+        void Button_MouseUp(object? sender, EventArgs.MouseEventArgs e)
         {
             _mouseDown = false;
         }
 
-        void Button_MouseDown(object? sender, EventArgs.SiegeUI_MouseEventArgs e)
+        void Button_MouseDown(object? sender, EventArgs.MouseEventArgs e)
         {
             _mouseDown = true;
         }

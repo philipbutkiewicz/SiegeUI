@@ -32,6 +32,17 @@ Button button = new Button(panel)
 };
 panel.Children.Add("button1", button);
 
+ProgressBar progressBar = new ProgressBar(mainWindow)
+{
+    Bounds = new Rectangle(32, 196, 256, 24),
+    Min = 0,
+    Max = 100,
+    Value = 50
+};
+
+mainWindow.Children.Add("progressBar1", progressBar);
+
+
 Controller.Windows.Add(mainWindow);
 
 for (; ;)

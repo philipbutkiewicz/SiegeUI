@@ -26,6 +26,7 @@ No public releases have been published yet.
   - ❌ Menu
   - ❌ MenuStrip
   - ✔️ Panel
+  - ✔️ ProgressBar
   - ❌ Scrollbar
   - ❌ SelectBox
   - ❌ StatusBar

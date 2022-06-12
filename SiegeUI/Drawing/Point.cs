@@ -29,6 +29,10 @@
             Y = y;
         }
 
+        /// <summary>
+        /// Returns a string that represents this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"{base.ToString()} {{ X: = {X}, Y: {Y} }}";

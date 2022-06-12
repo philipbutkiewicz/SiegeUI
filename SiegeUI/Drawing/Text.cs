@@ -34,8 +34,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_content != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _content = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -115,6 +119,11 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (value < 0 || value > 1024)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
                 _fontSize = value;
                 _textureNeedsUpdating = true;
             }
@@ -131,8 +140,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_font != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+                
                 _font = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -147,8 +160,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_backColor != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _backColor = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -163,8 +180,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_foreColor != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _foreColor = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -179,8 +200,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_shadowColor != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _shadowColor = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -195,8 +220,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_shadowOffset != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _shadowOffset = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -211,8 +240,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_shadowBlur != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _shadowBlur = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -227,8 +260,12 @@ namespace SiegeUI.Drawing
             }
             set
             {
+                if (_shadow != value)
+                {
+                    _textureNeedsUpdating = true;
+                }
+
                 _shadow = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -244,7 +281,6 @@ namespace SiegeUI.Drawing
             set
             {
                 _autoSize = value;
-                _textureNeedsUpdating = true;
             }
         }
 
@@ -413,6 +449,8 @@ namespace SiegeUI.Drawing
         void UpdateTexture(IntPtr sdlRenderer)
         {
             LoadCurrentFont();
+
+            SDL.SDL_DestroyTexture(_sdlTexture);
 
             IntPtr textSurface = BackColor == Color.Transparent ? SDL_ttf.TTF_RenderText_Blended(_ttfFont, _content, _foreColor.ToSDLColor()) :
                 SDL_ttf.TTF_RenderText_Shaded(_ttfFont, Content, _foreColor.ToSDLColor(), _backColor.ToSDLColor());

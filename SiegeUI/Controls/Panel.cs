@@ -9,22 +9,62 @@ namespace SiegeUI.Controls
 {
     public class Panel : Control
     {
-        #region Fields
+        #region Properties
 
         /// <summary>
         /// Background color.
         /// </summary>
-        public new Color BackColor = Color.LightGray;
+        public new Color BackColor
+        {
+            get
+            {
+                return _backColor;
+            }
+            set
+            {
+                _backColor = value;
+            }
+        }
 
         /// <summary>
         /// Border color.
         /// </summary>
-        public Color BorderColor = Color.MediumGray;
+        public Color BorderColor
+        {
+            get
+            {
+                return _borderColor;
+            }
+            set
+            {
+                _borderColor = value;
+            }
+        }
 
         /// <summary>
         /// Border size.
         /// </summary>
-        public int BorderSize = 1;
+        public int BorderSize
+        {
+            get
+            {
+                return _borderSize;
+            }
+            set
+            {
+                _borderSize = value;
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        Color _backColor = Color.LightGray;
+
+        Color _borderColor = Color.MediumGray;
+
+        int _borderSize = 1;
 
         #endregion
 
@@ -39,10 +79,14 @@ namespace SiegeUI.Controls
         /// </summary>
         public override void Update(IntPtr sdlRenderer, bool renderBackground = true)
         {
-            Bounds.RenderFilled(sdlRenderer, BorderColor);
+            Bounds.RenderFilled(sdlRenderer, _borderColor);
 
-            new Rectangle(Bounds.X + BorderSize, Bounds.Y + BorderSize,
-                Bounds.Width - (BorderSize * 2), Bounds.Height - (BorderSize * 2)).RenderFilled(sdlRenderer, BackColor);
+            new Rectangle(
+                Bounds.X + _borderSize,
+                Bounds.Y + _borderSize,
+                Bounds.Width - (_borderSize * 2),
+                Bounds.Height - (_borderSize * 2)
+            ).RenderFilled(sdlRenderer, _backColor);
 
             base.Update(sdlRenderer, false);
         }

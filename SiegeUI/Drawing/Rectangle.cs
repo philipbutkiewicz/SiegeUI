@@ -9,22 +9,96 @@ namespace SiegeUI.Drawing
         /// <summary>
         /// Rectangle X position (left).
         /// </summary>
-        public int X { get; set; } = 0;
+        public int X
+        {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                _x = value;
+            }
+        }
 
         /// <summary>
         /// Rectangle Y position (top).
         /// </summary>
-        public int Y { get; set; } = 0;
+        public int Y
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                _y = value;
+            }
+        }
 
         /// <summary>
         /// Rectagnle width.
         /// </summary>
-        public int Width { get; set; } = 0;
+        public int Width
+        {
+            get
+            {
+                return _width;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Width cannot be less than 0", "value");
+                }
+
+                _width = value;
+            }
+        }
 
         /// <summary>
         /// Rectangle height.
         /// </summary>
-        public int Height { get; set; } = 0;
+        public int Height
+        {
+            get
+            {
+                return _height;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Height cannot be less than 0", "value");
+                }
+
+                _height = value;
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// Rectangle X position (left).
+        /// </summary>
+        int _x = 0;
+
+        /// <summary>
+        /// Rectangle Y position (top).
+        /// </summary>
+        int _y = 0;
+
+        /// <summary>
+        /// Rectagnle width.
+        /// </summary>
+        int _width = 0;
+
+        /// <summary>
+        /// Rectangle height.
+        /// </summary>
+        int _height = 0;
 
         #endregion
 
@@ -86,17 +160,21 @@ namespace SiegeUI.Drawing
         public SDL.SDL_Rect ToSDLRect()
         {
             SDL.SDL_Rect rect = new SDL.SDL_Rect();
-            rect.x = X;
-            rect.y = Y;
-            rect.w = Width;
-            rect.h = Height;
+            rect.x = _x;
+            rect.y = _y;
+            rect.w = _width;
+            rect.h = _height;
 
             return rect;
         }
 
+        /// <summary>
+        /// Returns a string that represents this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return $"{base.ToString()} {{ X: {X}, Y: {Y}, Width: {Width}, Height: {Height} }}";
+            return $"{base.ToString()} {{ X: {_x}, Y: {_y}, Width: {_width}, Height: {_height} }}";
         }
 
         #endregion

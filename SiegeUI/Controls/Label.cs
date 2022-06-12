@@ -40,7 +40,7 @@ namespace SiegeUI.Controls
         /// <summary>
         /// Text padding.
         /// </summary>
-        public Quad Padding
+        public new Quad Padding
         {
             get
             {
