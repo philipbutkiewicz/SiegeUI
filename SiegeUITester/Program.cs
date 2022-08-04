@@ -13,6 +13,7 @@ Panel panel = new Panel(mainWindow)
 
 mainWindow.Children.Add("panel1", panel);
 
+
 Label label = new Label(panel)
 {
     Text = "Hello world",
@@ -21,6 +22,7 @@ Label label = new Label(panel)
     Docking = Control.DockingMode.Top,
     Align = Text.TextAlign.Middle
 };
+
 panel.Children.Add("label1", label);
 
 Button button = new Button(panel)
@@ -28,9 +30,12 @@ Button button = new Button(panel)
     Text = "Button",
     Bounds = new Rectangle(32, 64, 58, 24),
     TextShadow = false,
-    Docking = Control.DockingMode.Bottom
+    Docking = Control.DockingMode.Bottom,
 };
+
 panel.Children.Add("button1", button);
+
+
 
 ProgressBar progressBar = new ProgressBar(mainWindow)
 {
@@ -41,6 +46,17 @@ ProgressBar progressBar = new ProgressBar(mainWindow)
 };
 
 mainWindow.Children.Add("progressBar1", progressBar);
+
+Image image = new Image(mainWindow.SDLRenderer, Path.Combine("Resources", Path.Combine("Textures", "test.bmp")));
+
+ImageBox imageBox = new ImageBox(mainWindow)
+{
+    Image = image,
+    Bounds = new Rectangle(32, 224, image.Size.Width, image.Size.Height),
+    Parent = mainWindow,
+};
+
+mainWindow.Children.Add("imageBox1", imageBox);
 
 
 Controller.Windows.Add(mainWindow);
